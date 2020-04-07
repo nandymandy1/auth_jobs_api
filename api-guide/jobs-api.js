@@ -59,8 +59,7 @@
         content-type: application/json, 
         Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hbmR5bWFuZHkxIiwiZW1haWwiOiJtYXVyeWFuYXJlbmRyYTExQGdtYWlsLmNvbSIsImlkIjoiNWU4YmNiY2I0OWMwNTE2M2NhYTljNDc0IiwiaWF0IjoxNTg2MjE5OTgwLCJleHAiOjE1ODYyMjcxODB9.nnZ7QPwW8PEmvhT0EwtdzBcz_r_yURQCBeIq0e0Sg4Y
     }
- * 
-
+    
  * Request Payload -
     {
         "name": "something1",

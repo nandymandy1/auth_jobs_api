@@ -30,7 +30,6 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
     try {
       const newUser = await User.create(req.body);
       const payload = {

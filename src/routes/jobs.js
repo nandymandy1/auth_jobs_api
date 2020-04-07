@@ -36,7 +36,6 @@ router.get("/", userAuth, async (req, res) => {
     let jobs = await Job.paginate({ user: req.user.id }, options);
     return res.status(200).json(jobs);
   } catch (err) {
-    a;
     console.error(err.message);
     return res.status(403).json({ message: err.message, success: false });
   }
