@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import { hash, compare } from "bcryptjs";
+import { Schema, model } from 'mongoose';
+import { hash, compare } from 'bcryptjs';
 
 const UserSchema = Schema(
   {
@@ -8,6 +8,7 @@ const UserSchema = Schema(
       required: true,
     },
     username: {
+      index: true,
       type: String,
       required: true,
       validate: {
@@ -24,6 +25,7 @@ const UserSchema = Schema(
       },
     },
     password: {
+      index: true,
       type: String,
       required: true,
     },
@@ -70,8 +72,8 @@ const UserSchema = Schema(
   { timestamps: true }
 );
 
-UserSchema.pre("save", async function () {
-  if (this.isModified("password")) {
+UserSchema.pre('save', async function () {
+  if (this.isModified('password')) {
     this.password = await hash(this.password, 12);
   }
 });
@@ -84,6 +86,6 @@ UserSchema.methods.isMatch = async function (password) {
   return await compare(password, this.password);
 };
 
-const User = model("users", UserSchema);
+const User = model('users', UserSchema);
 
 export default User;

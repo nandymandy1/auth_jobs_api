@@ -1,10 +1,10 @@
-import { Schema, model } from "mongoose";
-import paginator from "mongoose-paginate-v2";
+import { Schema, model } from 'mongoose';
+import paginator from 'mongoose-paginate-v2';
 
 const JobsSchema = Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "users",
+    ref: 'users',
   },
   name: {
     type: String,
@@ -36,4 +36,4 @@ const JobsSchema = Schema({
 });
 
 JobsSchema.plugin(paginator);
-export default model("jobs", JobsSchema);
+export default model('jobs', JobsSchema);

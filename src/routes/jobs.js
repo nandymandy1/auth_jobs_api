@@ -1,8 +1,8 @@
-import express from "express";
-import { Job } from "../models";
-import randomize from "randomatic";
-import { userAuth } from "../functions/auth";
-import { check, validationResult } from "express-validator";
+import express from 'express';
+import { Job } from '../models';
+import randomize from 'randomatic';
+import { userAuth } from '../functions/auth';
+import { check, validationResult } from 'express-validator';
 
 const router = express.Router();
 /**
@@ -10,18 +10,18 @@ const router = express.Router();
  * @DESC   Get jobs posted by user
  * @ACCESS  Private
  */
-router.get("/", userAuth, async (req, res) => {
+router.get('/', userAuth, async (req, res) => {
   try {
     const myCustomLabels = {
-      totalDocs: "jobCount",
-      docs: "jobs",
-      limit: "perPage",
-      page: "currentPage",
-      nextPage: "next",
-      prevPage: "prev",
-      totalPages: "pageCount",
-      pagingCounter: "slNo",
-      meta: "paginator",
+      totalDocs: 'jobCount',
+      docs: 'jobs',
+      limit: 'perPage',
+      page: 'currentPage',
+      nextPage: 'next',
+      prevPage: 'prev',
+      totalPages: 'pageCount',
+      pagingCounter: 'slNo',
+      meta: 'paginator',
     };
 
     const { page } = req.query;
@@ -47,14 +47,14 @@ router.get("/", userAuth, async (req, res) => {
  * @ROUTE  POST api/jobs
  */
 router.post(
-  "/",
+  '/',
   userAuth,
   [
-    check("name", "Name is required").not().isEmpty(),
-    check("phone", "Enter a valid mobile number").isLength({ min: 10 }),
-    check("standard", "class cannot not be empty").not().isEmpty(),
-    check("school", "school cannot be empty").not().isEmpty(),
-    check("area", "area cannot be empty").not().isEmpty(),
+    check('name', 'Name is required').not().isEmpty(),
+    check('phone', 'Enter a valid mobile number').isLength({ min: 10 }),
+    check('standard', 'class cannot not be empty').not().isEmpty(),
+    check('school', 'school cannot be empty').not().isEmpty(),
+    check('area', 'area cannot be empty').not().isEmpty(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -63,8 +63,8 @@ router.post(
     }
 
     //generate unique job id for user
-    let numberRandom = randomize("0", 5, { exclude: "0" });
-    var jobId = "XJ " + numberRandom;
+    let numberRandom = randomize('0', 5, { exclude: '0' });
+    var jobId = 'XJ ' + numberRandom;
 
     try {
       // Create New Job Object
