@@ -8,3 +8,15 @@ export const signToken = async (payload) => {
 };
 
 export const userAuth = passport.authenticate("jwt", { session: false });
+
+export const serializeUser = ({
+  email,
+  username,
+  name,
+  aadhar,
+  phone,
+  phone2,
+  orgName,
+}) => {
+  return { email, username, name, aadhar, phone, phone2, orgName };
+};

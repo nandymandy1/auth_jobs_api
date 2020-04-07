@@ -1,7 +1,6 @@
 import express from "express";
 import { User } from "../models";
-import { userAuth } from "../functions/auth";
-import { signToken } from "../functions/auth";
+import { signToken, userAuth, serializeUser } from "../functions/auth";
 import { check, validationResult } from "express-validator";
 const router = express.Router();
 
@@ -56,7 +55,7 @@ router.post(
  * @END_PT /api/users/auth
  */
 router.get("/auth", userAuth, async (req, res) => {
-  let authUser = req.user;
+  let authUser = serializeUser(req.user);
   return res.status(200).json(authUser);
 });
 
