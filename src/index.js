@@ -37,7 +37,7 @@ const startApp = async () => {
       message: `Database connected successfully \n${APP_DB}`,
       badge: true,
     });
-    app.listen(PORT, () =>
+    app.listen(PORT || process.env.PORT, () =>
       consola.success({
         message: `Server started on port ${APP_PORT}`,
         badge: true,
