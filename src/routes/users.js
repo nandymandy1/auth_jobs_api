@@ -1,13 +1,14 @@
-import express from "express";
+import Router from "express";
 import { User } from "../models";
 import { check, validationResult } from "express-validator";
 import {
-  signToken,
   userAuth,
+  signToken,
   serializeUser,
   validateRefreshToken,
 } from "../functions/auth";
-const router = express.Router();
+
+const router = Router();
 
 /**
  * @TYPE POST
@@ -32,17 +33,8 @@ router.post(
     }
     try {
       const newUser = await User.create(req.body);
-      const payload = {
-        username: newUser.username,
-        email: newUser.email,
-        id: newUser.id,
-      };
-      //to generate a token ,sign it first
-      let token = await signToken(payload);
-      let refreshToken = await signToken(payload, "2 days");
-      return res.status(201).json({ token, refreshToken, success: true });
+      tokenResp(newUser, res);
     } catch (err) {
-      console.log(err.message);
       return res.status(403).json({ message: err.message, success: false });
     }
   }
@@ -79,36 +71,28 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
     const { username, password } = req.body;
-
     try {
       // Find the user from the database using the username
       const user = await User.findOne({ username });
       if (!user) {
-        return res
-          .status(404)
-          .json({ message: "Username not found", success: false });
+        return res.status(404).json({
+          message: "Username not found",
+          success: false,
+        });
       }
-
       // Compare the password using the User Prototype Schema Method
       if (!(await user.isMatch(password, user.password))) {
-        return res
-          .status(403)
-          .json({ message: "Incorrect password", success: false });
+        return res.status(403).json({
+          message: "Incorrect password",
+          success: false,
+        });
       }
-
-      // Prepare the payload for the token
-      const payload = {
-        username: user.username,
-        email: user.email,
-        id: user.id,
-      };
-
-      //to generate a token ,sign it first
-      let token = await signToken(payload);
-      let refreshToken = await signToken(payload, "2 days");
-      return res.status(201).json({ token, refreshToken, success: true });
+      tokenResp(user, res);
     } catch (err) {
-      return res.status(201).json({ message: err.message, success: false });
+      return res.status(201).json({
+        message: err.message,
+        success: false,
+      });
     }
   }
 );
@@ -117,28 +101,36 @@ router.post("/refresh-token", async (req, res) => {
   try {
     let refreshtoken = req.headers.refreshtoken;
     if (!refreshtoken) {
-      return res.json({ message: "No Refresh Token Found", success: false });
+      throw new Error("No Refresh Token Found");
     }
-
     let user = await validateRefreshToken(refreshtoken);
     if (!user) {
       throw new Error("Invalid Refresh Token Attempt");
     }
-
-    // Prepare the payload for the token
-    const payload = {
-      username: user.username,
-      email: user.email,
-      id: user.id,
-    };
-
-    //to generate a token ,sign it first
-    let token = await signToken(payload);
-    let refreshToken = await signToken(payload, "2 days");
-    return res.status(201).json({ token, refreshToken, success: true });
+    tokenResp(user, res);
   } catch (err) {
-    return res.status(201).json({ message: err.message, success: false });
+    return res.status(201).json({
+      message: err.message,
+      success: false,
+    });
   }
 });
+
+const tokenResp = async (user, res) => {
+  const payload = {
+    id: user.id,
+    email: user.email,
+    username: user.username,
+  };
+
+  //to generate a token ,sign it first
+  let token = await signToken(payload);
+  let refreshToken = await signToken(payload, "2 days");
+  return res.status(201).json({
+    token,
+    refreshToken,
+    success: true,
+  });
+};
 
 export default router;
