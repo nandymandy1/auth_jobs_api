@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import passport from "passport";
 
 // Config Import
-import { APP_DB, APP_PORT } from "./config";
+import { APP_DB, PORT } from "./config";
 
 // Routes Import
 import jobRoutes from "./routes/jobs";
@@ -15,8 +15,6 @@ import userRoutes from "./routes/users";
 const app = express();
 
 require("./middleware/auth");
-
-const PORT = APP_PORT || process.env.PORT;
 
 // Application Middlewares
 app.use(cors());
