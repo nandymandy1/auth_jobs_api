@@ -9,13 +9,13 @@ const opts = {
 };
 
 passport.use(
-  new Strategy(opts, async (payload, done) => {
+  new Strategy(opts, async ({ id, userKey }, done) => {
     try {
-      let user = await User.findById(payload.id);
-      if (payload.userKey !== user.userKey) {
-        return done(null, false);
-      }
+      let user = await User.findById(id);
       if (user) {
+        if (userKey !== user.userKey) {
+          return done(null, false);
+        }
         return done(null, user);
       }
       return done(null, false);
