@@ -12,8 +12,12 @@ export const signToken = async (payload, expiresIn = 60) => {
 export const validateRefreshToken = async (refreshToken) => {
   try {
     let token = refreshToken.replace("Bearer ", "");
-    let { id } = jwt.verify(token, REFRESH_TOKEN);
-    return await User.findById(id);
+    let { id, userKey } = jwt.verify(token, REFRESH_TOKEN);
+    let user = await User.findById(id);
+    if (user.userKey !== userKey) {
+      throw new Error("Password Changed. Please authenticate again.");
+    }
+    return user;
   } catch (err) {
     return null;
   }

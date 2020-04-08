@@ -12,6 +12,9 @@ passport.use(
   new Strategy(opts, async (payload, done) => {
     try {
       let user = await User.findById(payload.id);
+      if (payload.userKey !== user.userKey) {
+        return done(null, false);
+      }
       if (user) {
         return done(null, user);
       }

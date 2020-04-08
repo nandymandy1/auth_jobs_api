@@ -9,7 +9,6 @@ import passport from "passport";
 import { APP_DB as DB, PORT as APP_PORT } from "./config";
 
 // Routes Import
-import jobRoutes from "./routes/jobs";
 import userRoutes from "./routes/users";
 
 const app = express();
@@ -22,7 +21,6 @@ app.use(bp.json());
 app.use(passport.initialize());
 
 // Routes Middleware
-app.use("/api/jobs", jobRoutes);
 app.use("/api/users", userRoutes);
 
 const startApp = async () => {
