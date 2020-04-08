@@ -35,7 +35,10 @@ router.post(
       const newUser = await User.create(req.body);
       tokenResp(newUser, res);
     } catch (err) {
-      return res.status(403).json({ message: err.message, success: false });
+      return res.status(403).json({
+        message: err.message,
+        success: false,
+      });
     }
   }
 );
@@ -89,7 +92,7 @@ router.post(
       }
       tokenResp(user, res);
     } catch (err) {
-      return res.status(201).json({
+      return res.status(401).json({
         message: err.message,
         success: false,
       });
@@ -109,7 +112,7 @@ router.post("/refresh-token", async (req, res) => {
     }
     tokenResp(user, res);
   } catch (err) {
-    return res.status(201).json({
+    return res.status(401).json({
       message: err.message,
       success: false,
     });
@@ -126,7 +129,7 @@ const tokenResp = async (user, res) => {
   //to generate a token ,sign it first
   let token = await signToken(payload);
   let refreshToken = await signToken(payload, "2 days");
-  return res.status(201).json({
+  return res.status(200).json({
     token,
     refreshToken,
     success: true,
