@@ -31,11 +31,11 @@ const UserSchema = Schema(
     },
     aadhar: {
       type: Number,
-      required: true,
+      required: false,
     },
     phone: {
       type: Number,
-      required: true,
+      required: false,
     },
     phone2: {
       type: Number,
@@ -43,15 +43,15 @@ const UserSchema = Schema(
     },
     category: {
       type: String,
-      required: true,
+      required: false,
     },
     orgName: {
       type: String,
-      required: true,
+      required: false,
     },
     address: {
       type: String,
-      required: true,
+      required: false,
     },
     accountName: {
       type: String,
