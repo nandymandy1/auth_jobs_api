@@ -1,7 +1,12 @@
 import express from "express";
 import { User } from "../models";
-import { signToken, userAuth, serializeUser } from "../functions/auth";
 import { check, validationResult } from "express-validator";
+import {
+  signToken,
+  userAuth,
+  serializeUser,
+  validateRefreshToken,
+} from "../functions/auth";
 const router = express.Router();
 
 /**
@@ -19,11 +24,6 @@ router.post(
     check("password", "Password must contain atleast six characters").isLength({
       min: 6,
     }),
-    check("phone", "Enter a valid mobile number").isLength({ min: 10 }),
-    check("aadhar", "Enter a valid aadhar number").isLength({ min: 12 }),
-    check("category", "Category is required").not().isEmpty(),
-    check("orgName", "orgName is required").not().isEmpty(),
-    check("address", "Address is required").not().isEmpty(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -39,7 +39,8 @@ router.post(
       };
       //to generate a token ,sign it first
       let token = await signToken(payload);
-      return res.status(201).json({ token, success: true });
+      let refreshToken = await signToken(payload, "2 days");
+      return res.status(201).json({ token, refreshToken, success: true });
     } catch (err) {
       console.log(err.message);
       return res.status(403).json({ message: err.message, success: false });
@@ -104,11 +105,40 @@ router.post(
 
       //to generate a token ,sign it first
       let token = await signToken(payload);
-      return res.status(201).json({ token, success: true });
+      let refreshToken = await signToken(payload, "2 days");
+      return res.status(201).json({ token, refreshToken, success: true });
     } catch (err) {
       return res.status(201).json({ message: err.message, success: false });
     }
   }
 );
+
+router.post("/refresh-token", async (req, res) => {
+  try {
+    let refreshtoken = req.headers.refreshtoken;
+    if (!refreshtoken) {
+      return res.json({ message: "No Refresh Token Found", success: false });
+    }
+
+    let user = await validateRefreshToken(refreshtoken);
+    if (!user) {
+      throw new Error("Invalid Refresh Token Attempt");
+    }
+
+    // Prepare the payload for the token
+    const payload = {
+      username: user.username,
+      email: user.email,
+      id: user.id,
+    };
+
+    //to generate a token ,sign it first
+    let token = await signToken(payload);
+    let refreshToken = await signToken(payload, "2 days");
+    return res.status(201).json({ token, refreshToken, success: true });
+  } catch (err) {
+    return res.status(201).json({ message: err.message, success: false });
+  }
+});
 
 export default router;

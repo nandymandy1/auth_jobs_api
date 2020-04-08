@@ -1,22 +1,26 @@
 import jwt from "jsonwebtoken";
 import passport from "passport";
-import { APP_SECRET } from "../config";
+import { User } from "../models";
+import { APP_SECRET, REFRESH_TOKEN } from "../config";
 
-export const signToken = async (payload) => {
-  let token = jwt.sign(payload, APP_SECRET, { expiresIn: "2h" });
+export const signToken = async (payload, expiresIn = 30) => {
+  let secret = expiresIn === 30 ? APP_SECRET : REFRESH_TOKEN;
+  let token = jwt.sign(payload, secret, { expiresIn });
   return `Bearer ${token}`;
+};
+
+export const validateRefreshToken = async (refreshToken) => {
+  try {
+    let token = refreshToken.replace("Bearer ", "");
+    let { id } = jwt.verify(token, REFRESH_TOKEN);
+    return await User.findById(id);
+  } catch (err) {
+    return null;
+  }
 };
 
 export const userAuth = passport.authenticate("jwt", { session: false });
 
-export const serializeUser = ({
-  email,
-  username,
-  name,
-  aadhar,
-  phone,
-  phone2,
-  orgName,
-}) => {
-  return { email, username, name, aadhar, phone, phone2, orgName };
+export const serializeUser = ({ email, username, name }) => {
+  return { email, username, name };
 };
