@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import passport from "passport";
 
 // Config Import
-import { APP_DB, PORT } from "./config";
+import { APP_DB, PORT as APP_PORT } from "./config";
 
 // Routes Import
 import jobRoutes from "./routes/jobs";
@@ -37,9 +37,9 @@ const startApp = async () => {
       message: `Database connected successfully \n${APP_DB}`,
       badge: true,
     });
-    app.listen(PORT || process.env.PORT, () =>
+    app.listen(APP_PORT, () =>
       consola.success({
-        message: `Server started on port ${PORT}`,
+        message: `Server started on port ${APP_PORT}`,
         badge: true,
       })
     );
