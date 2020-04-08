@@ -39,7 +39,7 @@ const startApp = async () => {
     });
     app.listen(PORT || process.env.PORT, () =>
       consola.success({
-        message: `Server started on port ${APP_PORT}`,
+        message: `Server started on port ${PORT}`,
         badge: true,
       })
     );
