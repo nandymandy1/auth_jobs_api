@@ -8,12 +8,7 @@
         "username": "xxxxxxxxxxxxx",
         "password": "xxxxxxxxxxxxx",
         "name": "Nxxxxxxx Mxxxxxxx",
-        "email": "xxxxxxxxxxx@gmail.com",
-        "aadhar": "xxxxxxxxxxxx",
-        "phone": "xxxxxxxxxxx",
-        "category": "Student",
-        "orgName": "something",
-        "address": "qwertyuiopasdfghjklzxcvbnm"
+        "email": "xxxxxxxxxxx@gmail.com"
     }
  * Response Payload -
     {

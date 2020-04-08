@@ -1,11 +1,11 @@
 import passport from "passport";
 import { User } from "../models";
-import { APP_SECRET as key } from "../config";
 import { Strategy, ExtractJwt } from "passport-jwt";
+import { APP_SECRET as secretOrKey } from "../config";
 
 const opts = {
+  secretOrKey,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: key,
 };
 
 passport.use(

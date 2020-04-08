@@ -29,7 +29,7 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json(errors);
     }
     try {
       const newUser = await User.create(req.body);
@@ -100,6 +100,36 @@ router.post(
   }
 );
 
+router.post(
+  "/password-reset",
+  userAuth,
+  [
+    check("password", "Password must contain atleast six characters").isLength({
+      min: 6,
+    }),
+  ],
+  async (req, res) => {
+    try {
+      const { password } = req.body;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors);
+      }
+      await User.findByIdAndUpdate(req.user.id, { password });
+      return res.status(201).json({
+        message: "Password Changed Successfully.",
+        success: true,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(403).json({
+        message: "Unable to update the password please retry.",
+        success: false,
+      });
+    }
+  }
+);
+
 router.post("/refresh-token", async (req, res) => {
   try {
     let refreshtoken = req.headers.refreshtoken;
@@ -119,13 +149,13 @@ router.post("/refresh-token", async (req, res) => {
   }
 });
 
-const tokenResp = async (user, res) => {
+const tokenResp = async ({ id, email, username, userKey }, res) => {
   const payload = {
-    id: user.id,
-    email: user.email,
-    username: user.username,
+    id,
+    email,
+    username,
+    userKey,
   };
-
   //to generate a token ,sign it first
   let token = await signToken(payload);
   let refreshToken = await signToken(payload, "2 days");

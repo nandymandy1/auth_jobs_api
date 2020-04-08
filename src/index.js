@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import passport from "passport";
 
 // Config Import
-import { APP_DB, PORT as APP_PORT } from "./config";
+import { APP_DB as DB, PORT as APP_PORT } from "./config";
 
 // Routes Import
 import jobRoutes from "./routes/jobs";
@@ -27,14 +27,15 @@ app.use("/api/users", userRoutes);
 
 const startApp = async () => {
   try {
-    await mongoose.connect(APP_DB, {
+    await mongoose.connect(DB, {
       useCreateIndex: true,
       useNewUrlParser: true,
       useFindAndModify: true,
+      useFindAndModify: false,
       useUnifiedTopology: true,
     });
     consola.success({
-      message: `Database connected successfully \n${APP_DB}`,
+      message: `Database connected successfully \n${DB}`,
       badge: true,
     });
     app.listen(APP_PORT, () =>
@@ -44,6 +45,7 @@ const startApp = async () => {
       })
     );
   } catch (err) {
+    console.log(err);
     consola.error({
       message: err.message,
       badge: true,
