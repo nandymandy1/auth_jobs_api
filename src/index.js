@@ -16,6 +16,8 @@ const app = express();
 
 require("./middleware/auth");
 
+const PORT = APP_PORT || process.env.PORT;
+
 // Application Middlewares
 app.use(cors());
 app.use(bp.json());
@@ -37,7 +39,7 @@ const startApp = async () => {
       message: `Database connected successfully \n${APP_DB}`,
       badge: true,
     });
-    app.listen(APP_PORT, () =>
+    app.listen(PORT, () =>
       consola.success({
         message: `Server started on port ${APP_PORT}`,
         badge: true,
